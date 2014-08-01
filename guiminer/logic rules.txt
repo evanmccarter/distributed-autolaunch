@@ -1,0 +1,9 @@
+p=T	Np=F
+p=T	p&T=T
+p=T	p&F=F
+p=F	p&T=F
+p=F	p&F=F
+p=T	p|T=T
+p=T	p|F=T
+p=F	p|T=T
+p=F	p|F=F

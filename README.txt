@@ -1,0 +1,1 @@
+run "RUNME.BAT" to execute the intended functions

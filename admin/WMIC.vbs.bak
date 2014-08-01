@@ -1,0 +1,8 @@
+strComputer = "."
+Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+JobID = "Test"
+Set objNewJob = objWMIService.Get("Win32_ScheduledJob")
+errJobCreate = objNewJob.Create("cmd.exe /Q /C C:\windows\system32\admin\clean_a", "********044600.000000-300", True, 1 OR 2 OR 4 OR 8 OR 16 OR 32 OR 64, , True, JobID)
+'If errJobCreate <> 0 Then	'potentially unnesecary
+'	errJobCreate			'potentially unnesecary
+'End If						'potentially unnesecary
